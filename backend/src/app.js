@@ -9,6 +9,14 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
   }
 
+  mongoose.connect(process.env.mongodb_uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+  
+  const db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 
 // Configure middleware
 
@@ -17,19 +25,12 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 // Import routes
 
-
-// Use routes
-
-mongoose.connect(process.env.mongodb_uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-  
-  const db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
+// Use routes
+
+
+
 
 // Start the server
 const port = process.env.PORT || 3000;
